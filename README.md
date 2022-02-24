@@ -2,7 +2,7 @@
 
 ## Usage
 
-`kubectl apply -f https://github.com/cloudogu/k8s-etcd/manifests/etcd.yaml`
+`kubectl apply -f https://raw.githubusercontent.com/cloudogu/k8s-etcd/develop/manifests/etcd.yaml`
 
 ### Info
 
