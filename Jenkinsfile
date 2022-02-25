@@ -11,8 +11,10 @@ node('docker') {
         catchError {
             timeout(activity: false, time: 60, unit: 'MINUTES') {
 
-                dir('etcd') {
-                    stage('Checkout etcd') {
+
+                stage('Checkout') {
+                    git branch: 'main', url: 'https://github.com/cloudogu/gitops-playground'
+                    dir('etcd') {
                         checkout scm
                     }
                 }
@@ -23,10 +25,6 @@ node('docker') {
                     docker.image(yamllintImage).inside('-v ${WORKSPACE}/etcd/manifests/:/data -t --entrypoint=""') {
                         sh "yamllint etcd/"
                     }
-                }
-
-                stage('Checkout cluster') {
-                    git branch: 'main', url: 'https://github.com/cloudogu/gitops-playground'
                 }
 
                 stage('Start gitops playground') {
