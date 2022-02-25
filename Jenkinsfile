@@ -11,7 +11,7 @@ node('docker') {
         yamllintImage = 'cytopia/yamllint:1.26'
 
         stage('Lint') {
-            docker.image(yamllintImage).inside('-v ${WORKSPACE}/manifests/:/data -t') {
+            docker.image(yamllintImage).inside('-v ${WORKSPACE}/manifests/:/data -t --entrypoint=""') {
                 sh "yamllint ."
             }
         }

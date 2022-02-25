@@ -6,7 +6,6 @@ metadata:
   labels:
     app: ces
     app.kubernetes.io/name: etcd
-  annotations:
 spec:
   type: ClusterIP
   ports:
@@ -91,7 +90,10 @@ spec:
             - name: ALLOW_NONE_AUTHENTICATION
               value: "yes"
             - name: ETCD_ADVERTISE_CLIENT_URLS
-              value: "http://$(MY_POD_NAME).etcd-headless.$(MY_POD_NAMESPACE).svc.cluster.local:2379,http://etcd.$(MY_POD_NAMESPACE).svc.cluster.local:4001"
+              # yamllint disable rule:line-length
+              value: "http://$(MY_POD_NAME).etcd-headless.$(MY_POD_NAMESPACE).svc.cluster.local:2379,\
+              http://etcd.$(MY_POD_NAMESPACE).svc.cluster.local:4001"
+              # yamllint enable rule:line-length
             - name: ETCD_LISTEN_CLIENT_URLS
               value: "http://0.0.0.0:2379"
           ports:
@@ -116,9 +118,6 @@ spec:
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            limits: {}
-            requests: {}
           volumeMounts:
             - name: data
               mountPath: /bitnami/etcd
