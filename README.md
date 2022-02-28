@@ -7,8 +7,8 @@
 ### Info
 
 This Resource creates a statefulset and a service to instantiate an etcd server with the `bitnami/etcd` image.
-The endpoint is `http://etcd.default.svc.cluster.local:4001` if you deploy this in the `default`namespace.
-The url changes if other namespace is used at deployment.
+The endpoint is `http://etcd.default.svc.cluster.local:4001` if you deploy this in the `default` namespace.
+The URL changes if another namespace is used at deployment.
 
 ## Testing
 

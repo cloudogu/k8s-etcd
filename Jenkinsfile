@@ -19,11 +19,11 @@ node('docker') {
                     }
                 }
 
-                yamllintImage = "cytopia/kubeval:0.15"
+                kubevalImage = "cytopia/kubeval:0.15"
 
                 stage("Lint k8s Resources") {
                     new Docker(this)
-                            .image(yamllintImage)
+                            .image(kubevalImage)
                             .inside("-v ${WORKSPACE}/etcd/manifests/:/data -t --entrypoint=")
                                     {
                                         sh "kubeval etcd/manifests/etcd.yaml --ignore-missing-schemas"
