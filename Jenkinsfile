@@ -19,12 +19,16 @@ node('docker') {
                     }
                 }
 
-                yamllintImage = 'cytopia/yamllint:1.26'
+                yamllintImage = "cytopia/kubeval:0.13"
+                String controllerVersion = getCurrentControllerVersion()
 
-                stage('Lint') {
-                    docker.image(yamllintImage).inside('-v ${WORKSPACE}/etcd/manifests/:/data -t --entrypoint=""') {
-                        sh "yamllint etcd/"
-                    }
+                stage("Lint k8s Resources") {
+                    new Docker(this)
+                            .image(yamllintImage)
+                            .inside("-v ${WORKSPACE}/target:/data -t --entrypoint=")
+                                    {
+                                        sh "kubeval /data/${repositoryName}_${controllerVersion}.yaml --ignore-missing-schemas"
+                                    }
                 }
 
                 stage('Start gitops playground') {
