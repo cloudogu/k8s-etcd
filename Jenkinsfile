@@ -24,9 +24,9 @@ node('docker') {
                 stage("Lint k8s Resources") {
                     new Docker(this)
                             .image(yamllintImage)
-                            .inside("-v ${WORKSPACE}/manifests:/data -t --entrypoint=")
+                            .inside("-v ${WORKSPACE}/etcd/manifests/:/data -t --entrypoint=")
                                     {
-                                        sh "kubeval /data/etcd.yaml --ignore-missing-schemas"
+                                        sh "kubeval etcd/manifests/etcd.yaml --ignore-missing-schemas"
                                     }
                 }
 
