@@ -19,15 +19,14 @@ node('docker') {
                     }
                 }
 
-                yamllintImage = "cytopia/kubeval:0.13"
-                String controllerVersion = getCurrentControllerVersion()
+                yamllintImage = "cytopia/kubeval:0.15"
 
                 stage("Lint k8s Resources") {
                     new Docker(this)
                             .image(yamllintImage)
-                            .inside("-v ${WORKSPACE}/target:/data -t --entrypoint=")
+                            .inside("-v ${WORKSPACE}/manifests:/data -t --entrypoint=")
                                     {
-                                        sh "kubeval /data/${repositoryName}_${controllerVersion}.yaml --ignore-missing-schemas"
+                                        sh "kubeval /data/etcd.yaml --ignore-missing-schemas"
                                     }
                 }
 
