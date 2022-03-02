@@ -8,5 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Use v1.49.0 of `ces-build-lib` #3
 - Kubernetes resource `etcd.yaml` to deploy an etcd server to an existing "ces" cluster #1
 
