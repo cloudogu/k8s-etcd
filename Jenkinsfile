@@ -38,6 +38,8 @@ node('docker') {
 
                 stage('Test etcd') {
                     k3d.kubectl("apply -f etcd/manifests/etcd.yaml")
+                    // Sleep because it takes time for the controller to create the resource. Without it would end up
+                    // in error "no matching resource found when run the wait command"
                     sleep(20)
                     k3d.kubectl("wait --for=condition=ready pod -l statefulset.kubernetes.io/pod-name=etcd-0 --timeout=300s")
                     k3d.kubectl("run etcd-client --restart='Never' --image docker.io/bitnami/etcd:3.5.2-debian-10-r0 --env ETCDCTL_API=2 --env ETCDCTL_ENDPOINTS=\"http://etcd.default.svc.cluster.local:4001\" --command -- sleep infinity")
