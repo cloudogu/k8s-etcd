@@ -14,17 +14,13 @@ productionReleaseBranch = "main"
 
 node('docker') {
     K3d k3d = new K3d(this, "${WORKSPACE}", "${WORKSPACE}/k3d", env.PATH)
-    def gitWithoutCreds = new Git(this)
 
     timestamps {
         catchError {
             timeout(activity: false, time: 60, unit: 'MINUTES') {
-
                 stage('Checkout') {
-                    gitWithoutCreds branch: 'main', url: 'https://github.com/cloudogu/gitops-playground'
-                    dir('etcd') {
-                        checkout scm
-                    }
+                    make('clean')
+                    checkout scm
                 }
 
                 kubevalImage = "cytopia/kubeval:0.15"

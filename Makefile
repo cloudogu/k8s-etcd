@@ -4,6 +4,7 @@ MAKEFILES_VERSION=7.0.1
 
 include build/make/variables.mk
 include build/make/k8s.mk
+include build/make/clean.mk
 
 .PHONY: generate-release-resource
 generate-release-resource: $(K8S_RESOURCE_TEMP_FOLDER)
