@@ -51,7 +51,7 @@ spec:
       serviceAccountName: "default"
       containers:
         - name: etcd
-          image: docker.io/bitnami/etcd:3.5.2-debian-10-r0
+          image: docker.io/bitnami/etcd:3.5.4-debian-11-r30
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsNonRoot: true
@@ -129,4 +129,4 @@ spec:
           - "ReadWriteOnce"
         resources:
           requests:
-            storage: "8Gi"
+            storage: "1Gi"
