@@ -12,8 +12,7 @@ include build/make/clean.mk
 generate-release-resource: $(K8S_RESOURCE_TEMP_FOLDER)
 	@cp manifests/etcd.yaml ${K8S_RESOURCE_TEMP_YAML}
 
-
 .PHONY: etcd-release
-setup-release: ## Interactively starts the release workflow.
+etcd-release: ## Interactively starts the release workflow.
 	@echo "Starting git flow release..."
 	@build/make/release.sh etcd
