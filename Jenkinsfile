@@ -86,9 +86,9 @@ void stageAutomaticRelease() {
             registry.pushK8sYaml(targetEtcdResourceYaml, repositoryName, "k8s", "${releaseVersion}")
         }
 
-        stage('Add Github-Release') {
-            releaseId = github.createReleaseWithChangelog(releaseVersion, changelog, productionReleaseBranch)
-        }
+//        stage('Add Github-Release') {
+//            releaseId = github.createReleaseWithChangelog(releaseVersion, changelog, productionReleaseBranch)
+//        }
     }
 }
 
