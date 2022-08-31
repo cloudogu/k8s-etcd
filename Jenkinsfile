@@ -19,8 +19,8 @@ node('docker') {
         catchError {
             timeout(activity: false, time: 60, unit: 'MINUTES') {
                 stage('Checkout') {
-                    make('clean')
                     checkout scm
+                    make 'clean'
                 }
 
                 kubevalImage = "cytopia/kubeval:0.15"
@@ -30,7 +30,7 @@ node('docker') {
                             .image(kubevalImage)
                             .inside("-v ${WORKSPACE}/etcd/manifests/:/data -t --entrypoint=")
                                     {
-                                        sh "kubeval etcd/manifests/etcd.yaml --ignore-missing-schemas"
+                                        sh "kubeval manifests/etcd.yaml --ignore-missing-schemas"
                                     }
                 }
 
@@ -42,7 +42,7 @@ node('docker') {
                 }
 
                 stage('Test etcd') {
-                    k3d.kubectl("apply -f etcd/manifests/etcd.yaml")
+                    k3d.kubectl("apply -f manifests/etcd.yaml")
                     // Sleep because it takes time for the controller to create the resource. Without it would end up
                     // in error "no matching resource found when run the wait command"
                     sleep(20)
@@ -76,7 +76,7 @@ void stageAutomaticRelease() {
         }
 
         stage('Generate release resource') {
-            make('generate-release-resource')
+            make'generate-release-resource'
         }
 
         stage('Push to Registry') {
