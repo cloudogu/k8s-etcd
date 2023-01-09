@@ -124,6 +124,9 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: data
+        labels:
+          app: ces
+          app.kubernetes.io/name: etcd
       spec:
         accessModes:
           - "ReadWriteOnce"
