@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - #7 add/update label for consistent mass deletion of CES K8s resources
-   - select any k8s-dogu-operator related resources like this: `kubectl get deploy,pod,dogu,rolebinding,... -l app=ces,app.kubernetes.io/name=k8s-dogu-operator`
+   - select any etcd related resources like this: `kubectl get deploy,pod,dogu,rolebinding,... -l app=ces,app.kubernetes.io/name=etcd`
    - select all CES components like this: `kubectl get deploy,pod,dogu,rolebinding,... -l app=ces`
   
 ### Added
