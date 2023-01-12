@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- #9 Change the initial seconds to start the ready probe to 0s.
+  -  The old value (60s) causes a slow ready state for the pod.
+  -  Actual startup of the etcd is much faster than that.
+
 ## [v3.5.4-1] - 2023-01-11
 
 ### Changed
