@@ -51,7 +51,7 @@ spec:
       serviceAccountName: "default"
       containers:
         - name: etcd
-          image: docker.io/bitnami/etcd:3.5.2-debian-10-r0
+          image: docker.io/bitnami/etcd:3.5.4-debian-11-r30
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsNonRoot: true
@@ -113,7 +113,6 @@ spec:
             exec:
               command:
                 - /opt/bitnami/scripts/etcd/healthcheck.sh
-            initialDelaySeconds: 60
             periodSeconds: 10
             timeoutSeconds: 5
             successThreshold: 1
@@ -124,9 +123,12 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: data
+        labels:
+          app: ces
+          app.kubernetes.io/name: etcd
       spec:
         accessModes:
           - "ReadWriteOnce"
         resources:
           requests:
-            storage: "8Gi"
+            storage: "1Gi"

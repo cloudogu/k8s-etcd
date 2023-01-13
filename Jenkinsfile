@@ -1,21 +1,26 @@
 #!groovy
-@Library('github.com/cloudogu/ces-build-lib@1.49.0')
+@Library('github.com/cloudogu/ces-build-lib@1.56.0')
 import com.cloudogu.ces.cesbuildlib.*
 
-node('docker') {
+git = new Git(this, "cesmarvin")
+git.committerName = 'cesmarvin'
+git.committerEmail = 'cesmarvin@cloudogu.com'
+gitflow = new GitFlow(this, git)
+github = new GitHub(this, git)
+changelog = new Changelog(this)
 
-    def git = new Git(this)
-    K3d k3d = new K3d(this, env.WORKSPACE, env.PATH)
+repositoryName = "k8s-etcd"
+productionReleaseBranch = "main"
+
+node('docker') {
+    K3d k3d = new K3d(this, "${WORKSPACE}", "${WORKSPACE}/k3d", env.PATH)
 
     timestamps {
         catchError {
             timeout(activity: false, time: 60, unit: 'MINUTES') {
-
                 stage('Checkout') {
-                    git branch: 'main', url: 'https://github.com/cloudogu/gitops-playground'
-                    dir('etcd') {
-                        checkout scm
-                    }
+                    checkout scm
+                    make 'clean'
                 }
 
                 kubevalImage = "cytopia/kubeval:0.15"
@@ -25,7 +30,7 @@ node('docker') {
                             .image(kubevalImage)
                             .inside("-v ${WORKSPACE}/etcd/manifests/:/data -t --entrypoint=")
                                     {
-                                        sh "kubeval etcd/manifests/etcd.yaml --ignore-missing-schemas"
+                                        sh "kubeval manifests/etcd.yaml --ignore-missing-schemas"
                                     }
                 }
 
@@ -37,7 +42,7 @@ node('docker') {
                 }
 
                 stage('Test etcd') {
-                    k3d.kubectl("apply -f etcd/manifests/etcd.yaml")
+                    k3d.kubectl("apply -f manifests/etcd.yaml")
                     // Sleep because it takes time for the controller to create the resource. Without it would end up
                     // in error "no matching resource found when run the wait command"
                     sleep(20)
@@ -54,5 +59,39 @@ node('docker') {
         stage('Remove k3d cluster') {
             k3d.deleteK3d()
         }
+
+        stage('Release') {
+            stageAutomaticRelease()
+        }
     }
+}
+
+void stageAutomaticRelease() {
+    if (gitflow.isReleaseBranch()) {
+        Makefile makefile = new Makefile(this)
+        String releaseVersion = makefile.getVersion()
+
+        stage('Finish Release') {
+            gitflow.finishRelease(releaseVersion, productionReleaseBranch)
+        }
+
+        stage('Generate release resource') {
+            make'generate-release-resource'
+        }
+
+        stage('Push to Registry') {
+            GString targetEtcdResourceYaml = "target/make/k8s/${repositoryName}_${releaseVersion}.yaml"
+
+            DoguRegistry registry = new DoguRegistry(this)
+            registry.pushK8sYaml(targetEtcdResourceYaml, repositoryName, "k8s", "${releaseVersion}")
+        }
+
+        stage('Add Github-Release') {
+            releaseId = github.createReleaseWithChangelog(releaseVersion, changelog, productionReleaseBranch)
+        }
+    }
+}
+
+void make(String makeArgs) {
+    sh "make ${makeArgs}"
 }
