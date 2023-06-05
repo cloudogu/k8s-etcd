@@ -118,7 +118,7 @@ spec:
               http://etcd.$(MY_POD_NAMESPACE).svc.cluster.local:4001"
               # yamllint enable rule:line-length
             - name: ETCD_LISTEN_CLIENT_URLS
-              value: "http://0.0.0.0:4001"
+              value: "http://0.0.0.0:4001,http://0.0.0.0:2379"
             - name: ETCD_INITIAL_ADVERTISE_PEER_URLS
               value: "http://$(MY_POD_NAME).etcd-headless.ecosystem.svc.cluster.local:2380"
             - name: ETCD_LISTEN_PEER_URLS
