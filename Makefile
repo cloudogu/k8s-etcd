@@ -1,10 +1,11 @@
 ARTIFACT_ID=k8s-etcd
 VERSION=3.5.4-2
-MAKEFILES_VERSION=7.0.1
+MAKEFILES_VERSION=7.5.0
 
 include build/make/variables.mk
 include build/make/k8s.mk
 include build/make/clean.mk
+include build/make/self-update.mk
 
 ##@ Release
 
