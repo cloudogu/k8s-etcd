@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v3.5.7-1] - 2023-06-06
 ### Changed
 - #11 Use correct advertise url to decrease startup time for the initial cluster creation.
   - Increase the delay of the readinessprobe to 10 seconds because the regular startup lasts 3 seconds.
