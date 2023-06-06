@@ -1,3 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: etcd-headless
+  labels:
+    app: ces
+    app.kubernetes.io/name: etcd
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  type: ClusterIP
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - name: client
+      port: 2379
+      targetPort: client
+    - name: peer
+      port: 2380
+      targetPort: peer
+  selector:
+    app.kubernetes.io/name: etcd
 ---
 apiVersion: v1
 kind: Service
@@ -9,8 +31,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - name: "client"
-      port: 4001
+    - port: 4001
       targetPort: client
   selector:
     app.kubernetes.io/name: etcd
@@ -51,7 +72,7 @@ spec:
       serviceAccountName: "default"
       containers:
         - name: etcd
-          image: docker.io/bitnami/etcd:3.5.4-debian-11-r30
+          image: docker.io/bitnami/etcd:3.5.7-debian-11-r22
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsNonRoot: true
@@ -69,6 +90,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: MY_STS_NAME
+              value: "etcd"
             - name: MY_POD_NAMESPACE
               valueFrom:
                 fieldRef:
@@ -95,10 +118,19 @@ spec:
               http://etcd.$(MY_POD_NAMESPACE).svc.cluster.local:4001"
               # yamllint enable rule:line-length
             - name: ETCD_LISTEN_CLIENT_URLS
-              value: "http://0.0.0.0:2379"
+              value: "http://0.0.0.0:4001,http://0.0.0.0:2379"
+            - name: ETCD_INITIAL_ADVERTISE_PEER_URLS
+              value: "http://$(MY_POD_NAME).etcd-headless.$(MY_POD_NAMESPACE).svc.cluster.local:2380"
+            - name: ETCD_LISTEN_PEER_URLS
+              value: "http://0.0.0.0:2380"
+            - name: ETCD_CLUSTER_DOMAIN
+              value: "etcd-headless.$(MY_POD_NAMESPACE).svc.cluster.local"
           ports:
             - name: client
               containerPort: 2379
+              protocol: TCP
+            - name: peer
+              containerPort: 2380
               protocol: TCP
           livenessProbe:
             exec:
@@ -113,6 +145,7 @@ spec:
             exec:
               command:
                 - /opt/bitnami/scripts/etcd/healthcheck.sh
+            initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 5
             successThreshold: 1

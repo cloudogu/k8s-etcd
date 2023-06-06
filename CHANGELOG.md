@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v3.5.7-1] - 2023-06-06
+### Changed
+- #11 Use correct advertise url to decrease startup time for the initial cluster creation.
+  - Increase the delay of the readinessprobe to 10 seconds because the regular startup lasts 3 seconds.
+- Add a headless service for the pods of the statefulset.
+- Upgrade etcd to etcd:3.5.7-debian-11-r22.
+
 ## [v3.5.4-2] - 2023-01-13
 ### Changed
 - #9 Change the initial seconds to start the ready probe to 0s.
