@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- #11 Use correct advertise url to decrease startup time for the initial cluster creation.
+  - Increase the delay of the readinessprobe to 10 seconds because the regular startup lasts 3 seconds.
+- Add a headless service for the pods of the statefulset.
+- Upgrade etcd to etcd:3.5.7-debian-11-r22.
 
 ## [v3.5.4-2] - 2023-01-13
 ### Changed
