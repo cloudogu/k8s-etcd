@@ -1,5 +1,5 @@
 ARTIFACT_ID=k8s-etcd
-VERSION=3.5.4-2
+VERSION=3.5.7-1
 MAKEFILES_VERSION=7.5.0
 
 include build/make/variables.mk
