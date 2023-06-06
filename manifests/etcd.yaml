@@ -13,7 +13,7 @@ spec:
   publishNotReadyAddresses: true
   ports:
     - name: client
-      port: 4001
+      port: 2379
       targetPort: client
     - name: peer
       port: 2380
@@ -32,7 +32,7 @@ spec:
   type: ClusterIP
   ports:
     - port: 4001
-      targetPort: 2379
+      targetPort: client
   selector:
     app.kubernetes.io/name: etcd
 ---
@@ -114,7 +114,7 @@ spec:
               value: "yes"
             - name: ETCD_ADVERTISE_CLIENT_URLS
               # yamllint disable rule:line-length
-              value: "http://$(MY_POD_NAME).etcd-headless.$(MY_POD_NAMESPACE).svc.cluster.local:4001,\
+              value: "http://$(MY_POD_NAME).etcd-headless.$(MY_POD_NAMESPACE).svc.cluster.local:2379,\
               http://etcd.$(MY_POD_NAMESPACE).svc.cluster.local:4001"
               # yamllint enable rule:line-length
             - name: ETCD_LISTEN_CLIENT_URLS
