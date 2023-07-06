@@ -60,9 +60,7 @@ node('docker') {
             k3d.deleteK3d()
         }
 
-        stage('Release') {
-            stageAutomaticRelease()
-        }
+        stageAutomaticRelease()
     }
 }
 
@@ -78,7 +76,7 @@ void stageAutomaticRelease() {
         }
 
         stage('Generate release resource') {
-            make'generate-release-resource'
+            make 'generate-release-resource'
         }
 
         stage('Push to Registry') {
@@ -92,12 +90,12 @@ void stageAutomaticRelease() {
             new Docker(this)
                     .image("golang:1.20")
                     .mountJenkinsUser()
-                    .inside("--volume ${WORKSPACE}:/go/src/${project} -w /go/src/${project}")
+                    .inside("--volume ${WORKSPACE}:/${repositoryName} -w /${repositoryName}")
                             {
                                 make 'k8s-helm-package-release'
 
                                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'harborhelmchartpush', usernameVariable: 'HARBOR_USERNAME', passwordVariable: 'HARBOR_PASSWORD']]) {
-                                    sh ".bin/helm registry login ${registryUrl} --username ${HARBOR_USERNAME} --password ${HARBOR_PASSWORD}"
+                                    sh ".bin/helm registry login ${registryUrl} --username '${HARBOR_USERNAME}' --password '${HARBOR_PASSWORD}'"
                                     sh ".bin/helm push target/make/k8s/helm/${repositoryName}-${releaseVersion}.tgz oci://${registryUrl}/${registryNamespace}"
                                 }
                             }
