@@ -1,5 +1,5 @@
 #!groovy
-@Library('github.com/cloudogu/ces-build-lib@1.64.2')
+@Library('github.com/cloudogu/ces-build-lib@1.65')
 import com.cloudogu.ces.cesbuildlib.*
 
 git = new Git(this, "cesmarvin")
@@ -70,6 +70,8 @@ void stageAutomaticRelease() {
     if (gitflow.isReleaseBranch()) {
         Makefile makefile = new Makefile(this)
         String releaseVersion = makefile.getVersion()
+        String registryNamespace = "k8s"
+        String registryUrl = "registry.cloudogu.com"
 
         stage('Finish Release') {
             gitflow.finishRelease(releaseVersion, productionReleaseBranch)
@@ -80,10 +82,25 @@ void stageAutomaticRelease() {
         }
 
         stage('Push to Registry') {
-            GString targetEtcdResourceYaml = "target/make/k8s/${repositoryName}_${releaseVersion}.yaml"
+            GString targetEtcdResourceYaml = "target/make/${registryNamespace}/${repositoryName}_${releaseVersion}.yaml"
 
             DoguRegistry registry = new DoguRegistry(this)
-            registry.pushK8sYaml(targetEtcdResourceYaml, repositoryName, "k8s", "${releaseVersion}")
+            registry.pushK8sYaml(targetEtcdResourceYaml, repositoryName, registryNamespace, "${releaseVersion}")
+        }
+
+        stage('Push Helm chart to Harbor') {
+            new Docker(this)
+                    .image("golang:1.20")
+                    .mountJenkinsUser()
+                    .inside("--volume ${WORKSPACE}:/go/src/${project} -w /go/src/${project}")
+                            {
+                                make 'k8s-helm-package-release'
+
+                                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'harborhelmchartpush', usernameVariable: 'HARBOR_USERNAME', passwordVariable: 'HARBOR_PASSWORD']]) {
+                                    sh ".bin/helm registry login ${registryUrl} --username ${HARBOR_USERNAME} --password ${HARBOR_PASSWORD}"
+                                    sh ".bin/helm push target/make/k8s/helm/${repositoryName}-${releaseVersion}.tgz oci://${registryUrl}/${registryNamespace}"
+                                }
+                            }
         }
 
         stage('Add Github-Release') {
