@@ -1,6 +1,6 @@
 ARTIFACT_ID=k8s-etcd
 VERSION=3.5.7-1
-MAKEFILES_VERSION=7.9.0
+MAKEFILES_VERSION=7.10.0
 REGISTRY_NAMESPACE?=k8s
 
 include build/make/variables.mk
