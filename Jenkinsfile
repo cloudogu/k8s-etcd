@@ -68,6 +68,7 @@ void stageAutomaticRelease() {
     if (gitflow.isReleaseBranch()) {
         Makefile makefile = new Makefile(this)
         String releaseVersion = makefile.getVersion()
+        String changelogVersion = git.getSimpleBranchName()
         String registryNamespace = "k8s"
         String registryUrl = "registry.cloudogu.com"
 
@@ -102,7 +103,7 @@ void stageAutomaticRelease() {
         }
 
         stage('Add Github-Release') {
-            releaseId = github.createReleaseWithChangelog(releaseVersion, changelog, productionReleaseBranch)
+            releaseId = github.createReleaseWithChangelog(changelogVersion, changelog, productionReleaseBranch)
         }
     }
 }
