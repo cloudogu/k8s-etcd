@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v3.5.7-3] - 2023-07-07
+### Fixed
+- #15 Use correct make target in helm release process
+
 ## [v3.5.7-2] - 2023-07-07
 ### Added
 - #13 Add additional helm chart as release artifact.
