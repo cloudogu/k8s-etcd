@@ -26,12 +26,20 @@ etcd-release: ## Interactively starts the release workflow.
 HELM_TEMPLATE_DIR=$(K8S_RESOURCE_TEMP_FOLDER)/helm/templates
 
 .PHONY: etcd-k8s-helm-generate
-etcd-k8s-helm-generate: k8s-helm-generate
+etcd-k8s-helm-generate: k8s-helm-generate fix-headless-services
 	@echo "Replacing generated Helm resource names with previous values"
 	@sed -i 's/name: {{ include "helm.fullname" . }}-etcd/name: etcd/' $(HELM_TEMPLATE_DIR)/etcd.yaml
 	@sed -i 's/name: {{ include "helm.fullname" . }}-headless/name: etcd-headless/' $(HELM_TEMPLATE_DIR)/headless.yaml
 	@sed -i 's/serviceName: {{ include "helm.fullname" . }}-headless/serviceName: etcd-headless/' $(HELM_TEMPLATE_DIR)/statefulset.yaml
 	@sed -i 's/name: {{ include "helm.fullname" . }}-etcd/name: etcd/' $(HELM_TEMPLATE_DIR)/statefulset.yaml
+
+ETCD_HEADLESS_SERVICE="$(HELM_TEMPLATE_DIR)/headless.yaml"
+
+# Helmify generates a regular service with DNS load balancing for headless services where clusterIP: none
+.PHONY: fix-headless-services
+fix-headless-services:
+	@echo "Fix wrong service type creation"
+	@sed -i 's/type: {{ .Values.headless.type }}/type: ClusterIP\n  clusterIP: None\n  publishNotReadyAddresses: true/' "${ETCD_HEADLESS_SERVICE}"
 
 .PHONY: etcd-k8s-helm-apply
 etcd-k8s-helm-apply: etcd-k8s-helm-generate ## Generates and installs the helm chart.
