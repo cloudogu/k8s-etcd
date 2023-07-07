@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v3.5.7-2] - 2023-07-07
+### Added
+- #13 Add additional helm chart as release artifact.
+
 ## [v3.5.7-1] - 2023-06-06
 ### Changed
 - #11 Use correct advertise url to decrease startup time for the initial cluster creation.
