@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- #19 Added dev target tu push the helm chart to a dev registry.
+- #19 Added dev target to push the helm chart to a dev registry.
 
 ## [v3.5.7-4] - 2023-08-14
 ### Fixed
