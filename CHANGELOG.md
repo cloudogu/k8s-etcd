@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - #19 Added dev target to push the helm chart to a dev registry.
 
+### Changed
+- #21 Update etcd to 3.5.9
+
 ## [v3.5.7-4] - 2023-08-14
 ### Fixed
 - #17 The pod of the etcd does not allow privilege-escalation
