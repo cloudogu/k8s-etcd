@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- #19 Added dev target to push the helm chart to a dev registry.
+
+### Changed
+- #21 Update etcd to 3.5.9
 
 ## [v3.5.7-4] - 2023-08-14
 ### Fixed
