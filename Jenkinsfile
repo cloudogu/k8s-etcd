@@ -73,7 +73,7 @@ void stageAutomaticRelease() {
         String registryUrl = "registry.cloudogu.com"
 
         stage('Finish Release') {
-            gitflow.finishRelease(releaseVersion, productionReleaseBranch)
+            gitflow.finishRelease(changelogVersion, productionReleaseBranch)
         }
 
         stage('Generate release resource') {
