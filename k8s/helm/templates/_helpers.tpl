@@ -4,7 +4,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 Kubernetes 1.4+.
 */}}
 {{- define "k8s-etcd.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- default "etcd" .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 
