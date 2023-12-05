@@ -11,6 +11,7 @@ changelog = new Changelog(this)
 Makefile makefile = new Makefile(this)
 Docker docker = new Docker(this)
 gpg = new Gpg(this, docker)
+goVersion = "1.21"
 
 repositoryOwner = "cloudogu"
 repositoryName = "k8s-etcd"
@@ -89,7 +90,7 @@ void stageAutomaticRelease(Makefile makefile) {
 
         stage('Push Helm chart to Harbor') {
             docker
-                .image("golang:1.20")
+                .image("golang:${goVersion}")
                 .mountJenkinsUser()
                 .inside("--volume ${WORKSPACE}:/${repositoryName} -w /${repositoryName}") {
                     make 'helm-package'
