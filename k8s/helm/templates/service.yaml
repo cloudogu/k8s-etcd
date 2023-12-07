@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "k8s-etcd.name" . }}
+  labels:
+    {{- include "k8s-etcd.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4001
+      targetPort: client
+  selector:
+    {{- include "k8s-etcd.selectorLabels" . | nindent 4 }}

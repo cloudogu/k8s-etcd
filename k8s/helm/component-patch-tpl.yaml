@@ -1,0 +1,11 @@
+apiVersion: v1
+
+values:
+  images:
+    etcd: docker.io/bitnami/etcd:3.5.9
+
+patches:
+  values.yaml:
+    image:
+      repository: "{{ registryFrom .images.etcd }}/{{ repositoryFrom .images.etcd }}"
+      tag: "{{ tagFrom .images.etcd }}"
