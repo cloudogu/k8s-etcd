@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v3.5.9-2] - 2023-12-08
+### Added
+- #22 Patch-templates for mirroring into airgapped environments
+### Changed
+- #22 Copy manifests yaml wallpaper into helm templates folder
+
 ## [v3.5.9-1] - 2023-09-19
 ### Added
 - #19 Added dev target to push the helm chart to a dev registry.
