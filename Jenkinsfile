@@ -1,5 +1,5 @@
 #!groovy
-@Library('github.com/cloudogu/ces-build-lib@1.68.0')
+@Library('github.com/cloudogu/ces-build-lib@2.2.1')
 import com.cloudogu.ces.cesbuildlib.*
 
 git = new Git(this, "cesmarvin")
@@ -10,7 +10,6 @@ github = new GitHub(this, git)
 changelog = new Changelog(this)
 Makefile makefile = new Makefile(this)
 Docker docker = new Docker(this)
-gpg = new Gpg(this, docker)
 goVersion = "1.21"
 
 repositoryOwner = "cloudogu"
@@ -80,16 +79,8 @@ void stageAutomaticRelease(Makefile makefile) {
         String releaseVersion = makefile.getVersion()
         String changelogVersion = git.getSimpleBranchName()
 
-        stage('Generate release resource') {
-            make 'generate-release-resource'
-        }
-
-        stage('Sign after Release') {
-            gpg.createSignature()
-        }
-
         stage('Push Helm chart to Harbor') {
-            docker
+            new Docker(this)
                 .image("golang:${goVersion}")
                 .mountJenkinsUser()
                 .inside("--volume ${WORKSPACE}:/${repositoryName} -w /${repositoryName}") {

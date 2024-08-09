@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v3.5.15-1] - 2024-08-09
+### Change
+- #24 Upgrade etcd to 3.5.15
+
 ## [v3.5.9-2] - 2023-12-08
 ### Added
 - #22 Patch-templates for mirroring into airgapped environments
