@@ -1,7 +1,7 @@
 apiVersion: v1
 values:
   images:
-    etcd: docker.io/bitnami/etcd:3.5.9
+    etcd: docker.io/bitnami/etcd:3.5.15
 patches:
   values.yaml:
     image:
